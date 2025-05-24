@@ -1,10 +1,51 @@
 const express = require("express");
+const morgan = require("morgan");
+const mongoose = require("mongoose");
+const Blog = require("./models/blog");
 
 const app = express();
 
+const dbURI =
+  "mongodb+srv://godd:test123@cluster0.dqlozn7.mongodb.net/node-tuts?retryWrites=true&w=majority&appName=Cluster0";
+mongoose
+  .connect(dbURI)
+  .then((result) => app.listen(3000))
+  .catch((err) => console.log(err));
+
 app.set("view engine", "ejs");
 
-app.listen(3000);
+app.use(express.static("public"));
+app.use(morgan("dev"));
+
+app.get("/add-blog", (req, res) => {
+  const blog = new Blog({
+    title: "new blog",
+    snippet: "about my new blog",
+    body: "more about my new blog",
+  });
+  blog
+    .save()
+    .then((result) => {
+      res.send(result);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
+// app.use((req, res, next) => {
+//   console.log("new request mode:");
+//   console.log("host:", req.hostname);
+//   console.log("path:", req.path);
+//   console.log("method:", req.method);
+//   next();
+// });
+
+// app.use((req, res, next) => {
+//   console.log("in the next middleware");
+
+//   next();
+// });
 
 app.get("/", (req, res) => {
   const blogs = [
