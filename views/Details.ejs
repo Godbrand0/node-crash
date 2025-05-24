@@ -12,5 +12,22 @@
       <a class="delete" data-doc="<%=blog._id%>">delete</a>
     </div>
     <%- include('./partials/foot.ejs') %>
+
+    <script>
+      const trashcan = document.querySelector("a.delete");
+      trashcan.addEventListener("click", (e) => {
+        const endpoint = `/blogs/${trashcan.dataset.doc}`;
+        fetch(endpoint, {
+          method: "DELETE",
+        })
+          .then((response) => {
+            response.json();
+          })
+          .then((data) => (window.location.href = "/"))
+          .catch((error) => {
+            console.error(error);
+          });
+      });
+    </script>
   </body>
 </html>

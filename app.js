@@ -104,6 +104,17 @@ app.get("/blogs/:id", (req, res) => {
     });
 });
 
+app.delete("/blogs/:id", (res, req) => {
+  const id = req.params.id;
+  Blog.findByIdAndDelete(id)
+    .then((result) => {
+      res.json({ redirect: "/blogs" });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 app.get("/blogs/create", (req, res) => {
   res.render("create", { title: "create" });
 });
