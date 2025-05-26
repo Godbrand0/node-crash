@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
   <%- include('./partials/head.ejs') %>
   <body>
@@ -14,19 +13,27 @@
     <%- include('./partials/foot.ejs') %>
 
     <script>
-      const trashcan = document.querySelector("a.delete");
-      trashcan.addEventListener("click", (e) => {
-        const endpoint = `/blogs/${trashcan.dataset.doc}`;
-        fetch(endpoint, {
-          method: "DELETE",
-        })
-          .then((response) => {
-            response.json();
+      // Select all delete buttons
+      const trashcans = document.querySelectorAll("a.delete");
+
+      trashcans.forEach((trashcan) => {
+        trashcan.addEventListener("click", (e) => {
+          e.preventDefault(); // Prevent default link behavior
+
+          const endpoint = `/blogs/${trashcan.dataset.doc}`;
+
+          fetch(endpoint, {
+            method: "DELETE",
           })
-          .then((data) => (window.location.href = "/"))
-          .catch((error) => {
-            console.error(error);
-          });
+            .then((response) => response.json())
+            .then((data) => {
+              // Redirect after delete
+              window.location.href = data.redirect;
+            })
+            .catch((error) => {
+              console.error("Error deleting:", error);
+            });
+        });
       });
     </script>
   </body>
